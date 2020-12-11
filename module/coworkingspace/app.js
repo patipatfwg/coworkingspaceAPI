@@ -24,10 +24,11 @@ con.connect(function(err){
   }
 });
 
-router.post('/login',(req,res)=>{ 
-  var username = 'patipat_cha';
-  var sql = "SELECT * FROM user WHERE activate = 1 AND id = ?";
-  con.query(sql,[username],function (err, rows, result) {
+router.post('/login',(req,res)=>{
+  var username = req.query.username;
+  var password = Base64.decode(req.query.password);
+  var sql = "SELECT * FROM user LEFT JOIN employee ON user.id = employee.user_id WHERE user.activate = 1 AND user.id = ? AND user.password = ?";
+  con.query(sql,[username,password],function (err, rows, result) {
     if(err){
       var headCode = 400;
       var headMessage = "SQL Syntax!!"
@@ -41,10 +42,20 @@ router.post('/login',(req,res)=>{
         var headMessage = "No Rows"
         var body = [];
       }else{
+        var first_name_en = rows[0]['first_name_en'];
+        var last_name_en = rows[0]['last_name_en'];
 
         var headMessage = "OK"
-        var body = [];
-
+        var body = {
+          "user":[
+            {
+              "username":username,
+              "firstname":first_name_en,
+              "lastname":last_name_en
+            }
+          ]
+        };
+        console.log(rows);
       }
       console.log( moment().tz('Asia/Bangkok').format("YYYY-MM-DD HH:mm:ss") + " SELECT COUNT: " + rows.length );
     }
