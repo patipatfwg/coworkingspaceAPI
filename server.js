@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 5623
+const port = 5622
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
