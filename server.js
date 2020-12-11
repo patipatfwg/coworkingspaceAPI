@@ -17,7 +17,7 @@ app.post('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.use('/api/coworkingspace/', coworkingspaceAPI);
+app.use('/api/coworkingspace', coworkingspaceAPI);
 
 
 app.listen(port, () => {
