@@ -26,10 +26,22 @@ con.connect(function(err){
 });
 
 router.post('/login',(req,res)=>{
-  if( !empty(req.query) && !empty(req.query.username) && !empty(req.query.password) ){
+  if( req.query.username==null && req.query.password==null ){
+    var head = {
+      "head":{
+        "datetime":moment().tz('Asia/Bangkok').format("YYYY-MM-DD HH:mm:ss") ,
+        "code":400,
+        "message":"Req Username and Password"
+      }
+    };
+    var body = {"body":body};
+    const data = Object.assign(head, body);
+    res.json(data);
+    con.end();
+  }else{
     var username = req.query.username;
     var password = Base64.decode(req.query.password);
-    var sql = "SELECT * FROM user LEFT JOIN employee ON user.id = employee.user_id WHERE user.activate = 1 AND user.id = ? AND user.password = ?";
+    var sql = "SELECT first_name_en,last_name_en FROM user LEFT JOIN employee ON user.id = employee.user_id WHERE user.activate = 1 AND user.id = ? AND user.password = ?";
     con.query(sql,[username,password],function (err, rows, result) {
       if(err){
         var headCode = 400;
@@ -39,7 +51,6 @@ router.post('/login',(req,res)=>{
         throw err;
       }else{
         var headCode = 200;
-
         if(rows.length==0){
           var headMessage = "No Rows"
           var body = [];
@@ -57,7 +68,7 @@ router.post('/login',(req,res)=>{
               }
             ]
           };
-          console.log(rows);
+          // console.log(rows);
         }
         console.log( moment().tz('Asia/Bangkok').format("YYYY-MM-DD HH:mm:ss") + " SELECT COUNT: " + rows.length );
       }
@@ -73,8 +84,7 @@ router.post('/login',(req,res)=>{
       const data = Object.assign(head, body);
       res.json(data);
     });
-  }else{
-    con.end();
+
   }
 });
 
