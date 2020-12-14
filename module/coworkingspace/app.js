@@ -84,8 +84,27 @@ router.post('/login',(req,res)=>{
       const data = Object.assign(head, body);
       res.json(data);
     });
-
   }
 });
+
+router.post('/booking/dashboard',(req,res)=>{
+  res.json({"message":"dashboard"});
+});
+
+router.post('/booking/create',(req,res)=>{
+  res.json('create');
+});
+
+router.post('/booking/update',(req,res)=>{
+  res.json('update');
+});
+
+router.post('/booking/delete',(req,res)=>{
+  res.json('delete');
+});
+
+
+
+
 
 module.exports = router;
